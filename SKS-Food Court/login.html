@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login — SKS Santapan Kilat Semester</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Archivo+Black&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <style>
+    /* ═── LOGIN SPECIFIC ─══ */
+    .login-page {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      overflow: hidden;
+    }
+    .login-left {
+      background: var(--bg2);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: clamp(32px, 5vw, 72px);
+      position: relative;
+      border-right: var(--bw) solid var(--border);
+    }
+    .login-left::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: linear-gradient(rgba(200,255,0,.04) 1px, transparent 1px), linear-gradient(90deg, rgba(200,255,0,.04) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+    }
+    .login-visual {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      max-width: 360px;
+    }
+    .login-bolt {
+      width: 120px;
+      height: 140px;
+      margin: 0 auto 24px;
+      position: relative;
+    }
+    .login-bolt svg { width: 100%; height: 100%; filter: drop-shadow(0 0 20px rgba(200,255,0,.3)); }
+    .login-quote {
+      font-family: var(--font-d);
+      font-size: clamp(36px, 5vw, 56px);
+      line-height: .95;
+      color: var(--neon);
+      margin-bottom: 16px;
+    }
+    .login-quote span { color: var(--text); }
+    .login-desc {
+      font-family: var(--font-m);
+      font-size: 11px;
+      color: var(--muted);
+      line-height: 1.7;
+      letter-spacing: .02em;
+    }
+    .login-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 32px;
+      width: 100%;
+    }
+    .login-stat {
+      background: var(--surface);
+      border: var(--bw) solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px;
+      text-align: center;
+      transition: border-color var(--tr), transform var(--tr), box-shadow var(--tr);
+    }
+    .login-stat:hover {
+      border-color: var(--neon);
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-d);
+    }
+    .login-stat-num {
+      font-family: var(--font-d);
+      font-size: 28px;
+      color: var(--neon);
+      line-height: 1;
+    }
+    .login-stat-label {
+      font-family: var(--font-m);
+      font-size: 8px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      margin-top: 4px;
+    }
+
+    .login-right {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: clamp(32px, 5vw, 72px);
+      position: relative;
+    }
+    .login-back {
+      position: absolute;
+      top: 24px;
+      left: 32px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-m);
+      font-size: 11px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      transition: color var(--tr);
+      cursor: pointer;
+      background: none;
+      border: none;
+      z-index: 10;
+    }
+    .login-back:hover { color: var(--neon); }
+    .login-form-wrap {
+      max-width: 380px;
+      width: 100%;
+      margin: 0 auto;
+      position: relative;
+      z-index: 5;
+    }
+    .login-header {
+      margin-bottom: 32px;
+    }
+    .login-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(200,255,0,.08);
+      border: var(--bw) solid var(--neon);
+      padding: 5px 14px;
+      border-radius: var(--radius);
+      font-family: var(--font-m);
+      font-size: 10px;
+      color: var(--neon);
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+    .login-title {
+      font-family: var(--font-d);
+      font-size: clamp(44px, 6vw, 68px);
+      line-height: .92;
+      margin-bottom: 8px;
+    }
+    .login-subtitle {
+      font-family: var(--font-m);
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .login-form { display: flex; flex-direction: column; gap: 14px; }
+    .login-group { position: relative; }
+    .login-group label {
+      display: block;
+      font-family: var(--font-m);
+      font-size: 9px;
+      color: var(--muted);
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      margin-bottom: 5px;
+    }
+    .login-input-wrap {
+      position: relative;
+    }
+    .login-input-wrap i {
+      position: absolute;
+      left: 13px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+      font-size: 14px;
+      pointer-events: none;
+      transition: color var(--tr);
+      z-index: 2;
+    }
+    .login-group input,
+    .login-group select {
+      width: 100%;
+      border: var(--bw) solid var(--border);
+      background: var(--surface);
+      padding: 12px 13px 12px 40px;
+      font-family: var(--font-m);
+      font-size: 12px;
+      color: var(--text);
+      border-radius: var(--radius);
+      outline: none;
+      transition: border-color var(--tr), box-shadow var(--tr), transform var(--tr);
+      appearance: none;
+      cursor: pointer;
+    }
+    .login-group select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23666680' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      background-size: 14px;
+      padding-right: 36px;
+    }
+    .login-group input:focus,
+    .login-group select:focus {
+      border-color: var(--neon);
+      box-shadow: 4px 4px 0 rgba(200,255,0,.18);
+      transform: translate(-2px, -2px);
+    }
+    .login-group input:focus + i,
+    .login-group select:focus + i { color: var(--neon); }
+
+    .login-options {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-family: var(--font-m);
+      font-size: 10px;
+      color: var(--muted);
+    }
+    .login-remember {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+    }
+    .login-remember input { accent-color: var(--neon); }
+    .login-forgot {
+      color: var(--neon);
+      cursor: pointer;
+      transition: opacity var(--tr);
+    }
+    .login-forgot:hover { opacity: .7; }
+
+    .login-btn {
+      width: 100%;
+      padding: 14px;
+      background: var(--neon);
+      color: #000;
+      border: var(--bw) solid var(--neon);
+      border-radius: var(--radius);
+      font-family: var(--font-ui);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: box-shadow var(--tr), transform var(--tr);
+      margin-top: 4px;
+    }
+    .login-btn:hover { box-shadow: var(--shadow-n); transform: translate(-3px, -3px); }
+    .login-btn:active { transform: scale(.96); }
+
+    .login-divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 18px 0;
+      font-family: var(--font-m);
+      font-size: 9px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .1em;
+    }
+    .login-divider::before, .login-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .login-socials {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .login-social {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 11px;
+      background: var(--surface);
+      border: var(--bw) solid var(--border);
+      border-radius: var(--radius);
+      font-family: var(--font-m);
+      font-size: 11px;
+      color: var(--text);
+      cursor: pointer;
+      transition: border-color var(--tr), box-shadow var(--tr), transform var(--tr), color var(--tr);
+    }
+    .login-social:hover {
+      border-color: var(--neon);
+      box-shadow: 3px 3px 0 rgba(200,255,0,.15);
+      transform: translate(-2px, -2px);
+      color: var(--neon);
+    }
+
+    .login-footer {
+      margin-top: 24px;
+      text-align: center;
+      font-family: var(--font-m);
+      font-size: 11px;
+      color: var(--muted);
+    }
+    .login-footer a {
+      color: var(--neon);
+      font-weight: 700;
+      transition: opacity var(--tr);
+    }
+    .login-footer a:hover { opacity: .7; }
+
+    /* Floating decorative elements */
+    .login-deco {
+      position: absolute;
+      border: 1.5px solid var(--neon);
+      opacity: .15;
+      pointer-events: none;
+    }
+    .deco-1 { width: 60px; height: 60px; top: 10%; right: 8%; animation: float 4s ease-in-out infinite; }
+    .deco-2 { width: 40px; height: 40px; bottom: 15%; left: 6%; animation: float 5s ease-in-out infinite .5s; }
+    .deco-3 { width: 80px; height: 2px; top: 25%; left: 12%; background: var(--neon); animation: hud-blink 2s infinite; }
+
+    /* Toast fix for mobile */
+    .toast-container {
+      position: fixed;
+      bottom: calc(60px + 14px);
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 9990;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      align-items: center;
+      pointer-events: none;
+    }
+    @media(min-width: 769px) {
+      .toast-container { bottom: 20px; }
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .login-page { grid-template-columns: 1fr; }
+      .login-left { display: none; }
+      .login-right { padding: 80px 24px 40px; }
+      .login-back { left: 24px; }
+    }
+    @media (max-width: 460px) {
+      .login-socials { grid-template-columns: 1fr; }
+      .login-title { font-size: clamp(36px, 8vw, 52px); }
+    }
+  </style>
+</head>
+<body>
+
+<div class="login-page">
+  <!-- LEFT: Visual -->
+  <div class="login-left" data-aos="fade-right" data-aos-duration="1000">
+    <div class="login-visual">
+      <div class="login-bolt" data-aos="zoom-in" data-aos-delay="200">
+        <svg viewBox="0 0 160 185" fill="none">
+          <ellipse cx="80" cy="147" rx="62" ry="15" fill="#13131A" stroke="#C8FF00" stroke-width="2.5"/>
+          <path d="M18 132 Q18 164 80 164 Q142 164 142 132 Z" fill="#13131A" stroke="#C8FF00" stroke-width="2.5"/>
+          <ellipse cx="80" cy="132" rx="62" ry="14" fill="#1E1E28" stroke="#C8FF00" stroke-width="2.5"/>
+          <ellipse cx="80" cy="132" rx="52" ry="9" fill="#252535"/>
+          <path d="M90 34L56 104H80L68 162L122 84H96Z" fill="#C8FF00" stroke="#070709" stroke-width="2" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="login-quote" data-aos="fade-up" data-aos-delay="400">
+        AMUNISI CEPAT,<br><span>TUGAS TAMAT.</span>
+      </div>
+      <p class="login-desc" data-aos="fade-up" data-aos-delay="600">
+        Sistem pemesanan online untuk mahasiswa yang selalu buru-buru. Makanan lezat, harga bersahabat, antar kilat.
+      </p>
+      <div class="login-stats" data-aos="fade-up" data-aos-delay="800">
+        <div class="login-stat">
+          <div class="login-stat-num">2.4K</div>
+          <div class="login-stat-label">Pesanan</div>
+        </div>
+        <div class="login-stat">
+          <div class="login-stat-num">4.9</div>
+          <div class="login-stat-label">Rating</div>
+        </div>
+        <div class="login-stat">
+          <div class="login-stat-num">&lt;15</div>
+          <div class="login-stat-label">Menit</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: Form -->
+  <div class="login-right">
+    <button class="login-back" onclick="location.href='index.html'" data-aos="fade-down">
+      <i class="bi bi-arrow-left"></i> Kembali
+    </button>
+
+    <div class="login-deco deco-1"></div>
+    <div class="login-deco deco-2"></div>
+    <div class="login-deco deco-3"></div>
+
+    <div class="login-form-wrap">
+      <div class="login-header" data-aos="fade-up" data-aos-delay="100">
+        <div class="login-tag"><span class="blink">▮</span> SISTEM LOGIN // AKTIF</div>
+        <h1 class="login-title">MASUK<br>AKUN</h1>
+        <p class="login-subtitle">Masuk untuk akses riwayat pesanan, voucher eksklusif, dan tracking real-time.</p>
+      </div>
+
+      <!-- ✅ SATU FORM LENGKAP DENGAN ROLE SELECTOR -->
+      <form class="login-form" onsubmit="event.preventDefault(); handleLogin();" data-aos="fade-up" data-aos-delay="200">
+        <div class="login-group">
+          <label>Email / Nomor HP</label>
+          <div class="login-input-wrap">
+            <i class="bi bi-envelope"></i>
+            <input type="text" id="loginEmail" placeholder="nama@email.com atau 08xx..." required>
+          </div>
+        </div>
+        <div class="login-group">
+          <label>Kata Sandi</label>
+          <div class="login-input-wrap">
+            <i class="bi bi-lock"></i>
+            <input type="password" id="loginPass" placeholder="••••••••" required>
+          </div>
+        </div>
+        
+        <!-- ✅ ROLE SELECTOR (BARU) -->
+        <div class="login-group">
+          <label>Masuk Sebagai</label>
+          <div class="login-input-wrap">
+            <i class="bi bi-person-badge"></i>
+            <select id="loginRole" required>
+              <option value="customer">Mahasiswa (Pelanggan)</option>
+              <option value="kasir">Kasir</option>
+              <option value="kurir">Kurir</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="login-options" data-aos="fade-up" data-aos-delay="300">
+          <label class="login-remember">
+            <input type="checkbox" id="loginRemember"> Ingat saya
+          </label>
+          <span class="login-forgot">Lupa sandi?</span>
+        </div>
+
+        <button type="submit" class="login-btn" data-aos="fade-up" data-aos-delay="400">
+          <i class="bi bi-lightning-charge-fill"></i> MASUK SEKARANG
+        </button>
+      </form>
+
+      <div class="login-divider" data-aos="fade-up" data-aos-delay="500">atau masuk dengan</div>
+
+      <div class="login-socials" data-aos="fade-up" data-aos-delay="600">
+        <button class="login-social" onclick="showToast('Login Google dalam pengembangan', 'error')">
+          <i class="bi bi-google"></i> Google
+        </button>
+        <button class="login-social" onclick="showToast('Login WhatsApp dalam pengembangan', 'error')">
+          <i class="bi bi-whatsapp"></i> WhatsApp
+        </button>
+      </div>
+
+      <div class="login-footer" data-aos="fade-up" data-aos-delay="700">
+        Belum punya akun? <a href="#" onclick="showToast('Fitur daftar segera hadir!', 'success'); return false;">Daftar Sekarang</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast container -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script>
+  // Init AOS
+  AOS.init({ once: true, offset: 50, duration: 800, easing: 'ease-out-cubic' });
+
+  // GSAP entrance for bolt
+  gsap.from('.login-bolt svg', {
+    duration: 1.2,
+    scale: 0.6,
+    rotation: -15,
+    opacity: 0,
+    ease: 'elastic.out(1, 0.5)',
+    delay: 0.3
+  });
+
+  // GSAP floating decor
+  gsap.to('.deco-1', { y: -15, duration: 2.5, repeat: -1, yoyo: true, ease: 'sine.inOut' });
+  gsap.to('.deco-2', { y: 15, duration: 3, repeat: -1, yoyo: true, ease: 'sine.inOut', delay: 0.5 });
+
+  function handleLogin() {
+    const email = document.getElementById('loginEmail').value.trim();
+    const pass = document.getElementById('loginPass').value;
+    const role = document.getElementById('loginRole').value;
+    
+    if (!email || !pass) { 
+      showToast('Lengkapi semua field!', 'error'); 
+      return; 
+    }
+
+    let name = 'User';
+    if (email.includes('@')) {
+      const local = email.split('@')[0];
+      name = local.charAt(0).toUpperCase() + local.slice(1);
+      name = name.replace(/[0-9.]/g, '');
+      if (name.length < 2) name = 'User';
+    } else {
+      name = 'User ' + email.slice(-4);
+    }
+
+    localStorage.setItem('sks_user', JSON.stringify({ name: name, email: email, role: role }));
+    
+    showToast('Login berhasil! Mengalihkan...', 'success');
+    
+    // Redirect berdasarkan role
+    setTimeout(() => { 
+      if (role === 'kasir') {
+        location.href = 'index.html#kasir-dashboard';
+      } else if (role === 'kurir') {
+        location.href = 'index.html#kurir-dashboard';
+      } else {
+        location.href = 'index.html';
+      }
+    }, 1200);
+  }
+
+  function showToast(msg, type = 'default') {
+    const tc = document.getElementById('toastContainer');
+    if (!tc) return;
+    const t = document.createElement('div');
+    t.className = 'toast ' + type;
+    const icon = type === 'success' ? 'bi-check-circle-fill' : type === 'error' ? 'bi-x-circle-fill' : 'bi-info-circle-fill';
+    t.innerHTML = '<i class="bi ' + icon + '"></i> ' + msg;
+    tc.appendChild(t);
+    setTimeout(() => t.remove(), 2600);
+  }
+</script>
+</body>
+</html>

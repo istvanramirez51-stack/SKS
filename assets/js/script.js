@@ -778,13 +778,25 @@ function downloadResi() {
     orderHistory[0].resiSaved = true;
     localStorage.setItem('sks_orders', JSON.stringify(orderHistory));
   }
-  // Enable back button
+  // ✅ FIX: Enable back button — remove disabled class AND override inline styles
   const backBtn = document.getElementById('trackingBackBtn');
-  if (backBtn) backBtn.classList.remove('disabled');
+  if (backBtn) {
+    backBtn.classList.remove('disabled');
+    backBtn.style.opacity = '1';
+    backBtn.style.pointerEvents = 'auto';
+    backBtn.style.cursor = 'pointer';
+  }
+  // Disable the save button so user knows it's done
+  const saveBtn = document.getElementById('simpanResiBtn');
+  if (saveBtn) {
+    saveBtn.innerHTML = '<i class="bi bi-check-lg"></i> RESI TERSIMPAN';
+    saveBtn.style.opacity = '.6';
+    saveBtn.style.pointerEvents = 'none';
+  }
   // Show WA button after saving resi
   const waBtn = document.getElementById('trackingWaBtn');
   if (waBtn) waBtn.style.display = 'flex';
-  showToast('Resi berhasil disimpan!', 'success');
+  showToast('Resi berhasil disimpan! Tombol kembali aktif.', 'success');
 }
 
 // ═── NOTIF / RIWAYAT PESANAN ─══
@@ -1040,7 +1052,12 @@ function showTrackingForOrder(idx) {
   // Enable back button (already saved from history)
   resiSaved = true;
   const backBtn = document.getElementById('trackingBackBtn');
-  if (backBtn) backBtn.classList.remove('disabled');
+  if (backBtn) {
+    backBtn.classList.remove('disabled');
+    backBtn.style.opacity = '1';
+    backBtn.style.pointerEvents = 'auto';
+    backBtn.style.cursor = 'pointer';
+  }
   const waBtn = document.getElementById('trackingWaBtn');
   if (waBtn) waBtn.style.display = 'flex';
 
@@ -1054,8 +1071,23 @@ function showTrackingForOrder(idx) {
 function tryGoBack() {
   if (!resiSaved) {
     showToast('Simpan resi terlebih dahulu!', 'error');
+    // Visual shake hint on SIMPAN RESI button
+    const saveBtn = document.getElementById('simpanResiBtn');
+    if (saveBtn) {
+      saveBtn.style.transition = 'transform .08s ease';
+      let i = 0;
+      const shakes = [6, -6, 5, -5, 3, -3, 0];
+      const doShake = () => {
+        if (i >= shakes.length) { saveBtn.style.transform = ''; return; }
+        saveBtn.style.transform = `translateX(${shakes[i]}px)`;
+        i++;
+        setTimeout(doShake, 60);
+      };
+      doShake();
+    }
     return;
   }
+  // ✅ FIX: resetAll then navigate back to beranda
   resetAll();
 }
 
@@ -1082,13 +1114,27 @@ function resetAll() {
   document.getElementById('checkoutPage').classList.remove('active');
   // Reset tracking button states
   const backBtn = document.getElementById('trackingBackBtn');
-  if (backBtn) backBtn.classList.add('disabled');
+  if (backBtn) {
+    backBtn.classList.add('disabled');
+    backBtn.style.opacity = '';
+    backBtn.style.pointerEvents = '';
+    backBtn.style.cursor = '';
+  }
+  const saveBtn = document.getElementById('simpanResiBtn');
+  if (saveBtn) {
+    saveBtn.innerHTML = '<i class="bi bi-download"></i> SIMPAN RESI';
+    saveBtn.style.opacity = '';
+    saveBtn.style.pointerEvents = '';
+  }
   const waBtn = document.getElementById('trackingWaBtn');
   if (waBtn) waBtn.style.display = 'none';
   // Close WA gate if open
   const gate = document.getElementById('waGateModal');
   if (gate) gate.style.display = 'none';
-  window.scrollTo(0, 0);
+  // ✅ FIX: scroll to top / beranda
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  const homeSection = document.querySelector('#home');
+  if (homeSection) setTimeout(() => homeSection.scrollIntoView({ behavior: 'smooth' }), 100);
   showToast('Pesanan selesai! Selamat menikmati.', 'success');
 }
 

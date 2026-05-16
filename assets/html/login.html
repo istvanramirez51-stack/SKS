@@ -3,181 +3,274 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login — SKS Santapan Kilat Semester</title>
+  <title>SKS — Login / Daftar</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Archivo+Black&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:ital,wght@0,400;0,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css">
-  <link rel="stylesheet" href="../css/style.css">
   <style>
-    /* ═── LOGIN SPECIFIC ─══ */
-    .login-page {
-      min-height: 100vh;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      overflow: hidden;
-    }
-    .login-left {
-      background: var(--bg2);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      padding: clamp(32px, 5vw, 72px);
-      position: relative;
-      border-right: var(--bw) solid var(--border);
-    }
-    .login-left::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background-image: linear-gradient(rgba(200,255,0,.04) 1px, transparent 1px), linear-gradient(90deg, rgba(200,255,0,.04) 1px, transparent 1px);
-      background-size: 40px 40px;
-      pointer-events: none;
-    }
-    .login-visual {
-      position: relative;
-      z-index: 1;
-      text-align: center;
-      max-width: 360px;
-    }
-    .login-bolt {
-      width: 120px;
-      height: 140px;
-      margin: 0 auto 24px;
-      position: relative;
-    }
-    .login-bolt svg { width: 100%; height: 100%; filter: drop-shadow(0 0 20px rgba(200,255,0,.3)); }
-    .login-quote {
-      font-family: var(--font-d);
-      font-size: clamp(36px, 5vw, 56px);
-      line-height: .95;
-      color: var(--neon);
-      margin-bottom: 16px;
-    }
-    .login-quote span { color: var(--text); }
-    .login-desc {
-      font-family: var(--font-m);
-      font-size: 11px;
-      color: var(--muted);
-      line-height: 1.7;
-      letter-spacing: .02em;
-    }
-    .login-stats {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-      margin-top: 32px;
-      width: 100%;
-    }
-    .login-stat {
-      background: var(--surface);
-      border: var(--bw) solid var(--border);
-      border-radius: var(--radius);
-      padding: 14px;
-      text-align: center;
-      transition: border-color var(--tr), transform var(--tr), box-shadow var(--tr);
-    }
-    .login-stat:hover {
-      border-color: var(--neon);
-      transform: translateY(-4px);
-      box-shadow: var(--shadow-d);
-    }
-    .login-stat-num {
-      font-family: var(--font-d);
-      font-size: 28px;
-      color: var(--neon);
-      line-height: 1;
-    }
-    .login-stat-label {
-      font-family: var(--font-m);
-      font-size: 8px;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: .1em;
-      margin-top: 4px;
+    /* ── RESET & ROOT ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --neon: #C8FF00;
+      --bg: #0b0b10;
+      --bg2: #111118;
+      --surface: #161620;
+      --border: rgba(200,255,0,.15);
+      --border-dim: rgba(255,255,255,.07);
+      --text: #f0f0f0;
+      --muted: #6b6b80;
+      --radius: 6px;
+      --bw: 1.5px;
+      --tr: .2s ease;
+      --font-d: 'Bebas Neue', sans-serif;
+      --font-m: 'Space Mono', monospace;
+      --font-b: 'DM Sans', sans-serif;
+      --shadow-n: 5px 5px 0 rgba(200,255,0,.25);
+      --shadow-d: 4px 4px 0 rgba(0,0,0,.4);
     }
 
-    .login-right {
+    html { height: 100%; -webkit-font-smoothing: antialiased; }
+
+    body {
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-b);
       display: flex;
       flex-direction: column;
+      align-items: center;
       justify-content: center;
-      padding: clamp(32px, 5vw, 72px);
+      padding: 20px 16px;
       position: relative;
+      overflow-x: hidden;
     }
-    .login-back {
-      position: absolute;
-      top: 24px;
-      left: 32px;
+
+    /* ── BACKGROUND GRID ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(200,255,0,.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(200,255,0,.03) 1px, transparent 1px);
+      background-size: 48px 48px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── GLOW ORBS ── */
+    .orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(80px);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .orb-1 {
+      width: 320px; height: 320px;
+      background: rgba(200,255,0,.06);
+      top: -80px; right: -80px;
+    }
+    .orb-2 {
+      width: 240px; height: 240px;
+      background: rgba(200,255,0,.04);
+      bottom: -60px; left: -60px;
+    }
+
+    /* ── BACK BUTTON ── */
+    .back-link {
+      position: fixed;
+      top: 20px;
+      left: 20px;
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      font-family: var(--font-m);
-      font-size: 11px;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: .1em;
-      transition: color var(--tr);
-      cursor: pointer;
-      background: none;
-      border: none;
-      z-index: 10;
-    }
-    .login-back:hover { color: var(--neon); }
-    .login-form-wrap {
-      max-width: 380px;
-      width: 100%;
-      margin: 0 auto;
-      position: relative;
-      z-index: 5;
-    }
-    .login-header {
-      margin-bottom: 32px;
-    }
-    .login-tag {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(200,255,0,.08);
-      border: var(--bw) solid var(--neon);
-      padding: 5px 14px;
-      border-radius: var(--radius);
+      gap: 7px;
       font-family: var(--font-m);
       font-size: 10px;
-      color: var(--neon);
-      letter-spacing: .1em;
-      text-transform: uppercase;
-      margin-bottom: 14px;
-    }
-    .login-title {
-      font-family: var(--font-d);
-      font-size: clamp(44px, 6vw, 68px);
-      line-height: .92;
-      margin-bottom: 8px;
-    }
-    .login-subtitle {
-      font-family: var(--font-m);
-      font-size: 12px;
       color: var(--muted);
-      line-height: 1.6;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      text-decoration: none;
+      transition: color var(--tr);
+      z-index: 10;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 8px 0;
+    }
+    .back-link:hover { color: var(--neon); }
+
+    /* ── BRAND MARK ── */
+    .brand {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-d);
+      font-size: 20px;
+      color: var(--neon);
+      letter-spacing: .05em;
+      z-index: 10;
+    }
+    .brand-bolt {
+      width: 20px; height: 24px;
+    }
+    .brand-bolt svg { width: 100%; height: 100%; }
+
+    /* ── WRAPPER ── */
+    .auth-wrapper {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 420px;
     }
 
-    .login-form { display: flex; flex-direction: column; gap: 14px; }
-    .login-group { position: relative; }
-    .login-group label {
-      display: block;
+    /* ── CARD ── */
+    .auth-card {
+      background: var(--surface);
+      border: var(--bw) solid var(--border-dim);
+      border-radius: 12px;
+      padding: clamp(28px, 5vw, 44px);
+      position: relative;
+      overflow: hidden;
+      box-shadow:
+        0 0 0 1px rgba(200,255,0,.05),
+        0 24px 48px rgba(0,0,0,.4);
+    }
+
+    /* Corner accents */
+    .auth-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 40px; height: 40px;
+      border-top: var(--bw) solid var(--neon);
+      border-left: var(--bw) solid var(--neon);
+      border-radius: 12px 0 0 0;
+      pointer-events: none;
+    }
+    .auth-card::after {
+      content: '';
+      position: absolute;
+      bottom: 0; right: 0;
+      width: 40px; height: 40px;
+      border-bottom: var(--bw) solid var(--neon);
+      border-right: var(--bw) solid var(--neon);
+      border-radius: 0 0 12px 0;
+      pointer-events: none;
+    }
+
+    /* ── PANEL SLIDER ── */
+    .panel-slider {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .panel {
+      width: 100%;
+      transition: opacity .35s ease, transform .35s cubic-bezier(.4,0,.2,1);
+    }
+    .panel.hidden-left {
+      position: absolute;
+      top: 0; left: 0; width: 100%;
+      opacity: 0;
+      transform: translateX(-28px);
+      pointer-events: none;
+    }
+    .panel.hidden-right {
+      position: absolute;
+      top: 0; left: 0; width: 100%;
+      opacity: 0;
+      transform: translateX(28px);
+      pointer-events: none;
+    }
+    .panel.active {
+      opacity: 1;
+      transform: translateX(0);
+      position: relative;
+      pointer-events: all;
+    }
+
+    /* ── TAB BAR ── */
+    .tab-bar {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      background: var(--bg2);
+      border: var(--bw) solid var(--border-dim);
+      border-radius: var(--radius);
+      padding: 3px;
+      margin-bottom: 28px;
+      gap: 3px;
+    }
+    .tab-btn {
+      padding: 9px;
+      font-family: var(--font-m);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      color: var(--muted);
+      background: transparent;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: color var(--tr), background var(--tr);
+    }
+    .tab-btn.active {
+      background: var(--neon);
+      color: #000;
+      font-weight: 700;
+    }
+
+    /* ── FORM HEADER ── */
+    .form-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
       font-family: var(--font-m);
       font-size: 9px;
-      color: var(--muted);
-      letter-spacing: .1em;
+      color: var(--neon);
       text-transform: uppercase;
-      margin-bottom: 5px;
+      letter-spacing: .12em;
+      margin-bottom: 10px;
+      opacity: .8;
     }
-    .login-input-wrap {
+    .blink { animation: blink-anim .9s step-end infinite; }
+    @keyframes blink-anim { 50% { opacity: 0; } }
+
+    .form-title {
+      font-family: var(--font-d);
+      font-size: clamp(40px, 10vw, 58px);
+      line-height: .92;
+      margin-bottom: 6px;
+      text-wrap: balance;
+    }
+    .form-subtitle {
+      font-family: var(--font-m);
+      font-size: 10px;
+      color: var(--muted);
+      line-height: 1.65;
+      margin-bottom: 24px;
+    }
+
+    /* ── FORM FIELDS ── */
+    .auth-form { display: flex; flex-direction: column; gap: 13px; }
+
+    .field-group { display: flex; flex-direction: column; gap: 5px; }
+    .field-label {
+      font-family: var(--font-m);
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      color: var(--muted);
+    }
+    .field-wrap {
       position: relative;
     }
-    .login-input-wrap i {
+    .field-wrap .fi {
       position: absolute;
       left: 13px;
       top: 50%;
@@ -186,157 +279,188 @@
       font-size: 14px;
       pointer-events: none;
       transition: color var(--tr);
-      z-index: 2;
     }
-    .login-group input,
-    .login-group select {
+    .field-wrap input,
+    .field-wrap select {
       width: 100%;
-      border: var(--bw) solid var(--border);
-      background: var(--surface);
-      padding: 12px 13px 12px 40px;
-      font-family: var(--font-m);
-      font-size: 12px;
+      background: var(--bg2);
+      border: var(--bw) solid var(--border-dim);
       color: var(--text);
+      font-family: var(--font-m);
+      font-size: 11px;
+      padding: 12px 13px 12px 40px;
       border-radius: var(--radius);
       outline: none;
       transition: border-color var(--tr), box-shadow var(--tr), transform var(--tr);
       appearance: none;
-      cursor: pointer;
+      -webkit-appearance: none;
     }
-    .login-group select {
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23666680' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    .field-wrap select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%236b6b80' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
       background-repeat: no-repeat;
       background-position: right 12px center;
-      background-size: 14px;
       padding-right: 36px;
     }
-    .login-group input:focus,
-    .login-group select:focus {
-      border-color: var(--neon);
-      box-shadow: 4px 4px 0 rgba(200,255,0,.18);
-      transform: translate(-2px, -2px);
-    }
-    .login-group input:focus + i,
-    .login-group select:focus + i { color: var(--neon); }
+    .field-wrap input::placeholder { color: var(--muted); opacity: .7; }
 
-    .login-options {
+    .field-wrap input:focus,
+    .field-wrap select:focus {
+      border-color: var(--neon);
+      box-shadow: 3px 3px 0 rgba(200,255,0,.15);
+      transform: translate(-1.5px, -1.5px);
+      background: var(--surface);
+    }
+    .field-wrap input:focus ~ .fi,
+    .field-wrap input:focus + .fi { color: var(--neon); }
+
+    /* ── FORM OPTIONS ── */
+    .form-options {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      font-family: var(--font-m);
-      font-size: 10px;
-      color: var(--muted);
+      margin-top: 2px;
     }
-    .login-remember {
+    .remember-label {
       display: flex;
       align-items: center;
       gap: 6px;
+      font-family: var(--font-m);
+      font-size: 9px;
+      color: var(--muted);
       cursor: pointer;
     }
-    .login-remember input { accent-color: var(--neon); }
-    .login-forgot {
-      color: var(--neon);
+    .remember-label input[type="checkbox"] {
+      width: 13px; height: 13px;
+      accent-color: var(--neon);
       cursor: pointer;
-      transition: opacity var(--tr);
     }
-    .login-forgot:hover { opacity: .7; }
-
-    .login-btn {
-      width: 100%;
-      padding: 14px;
-      background: var(--neon);
-      color: #000;
-      border: var(--bw) solid var(--neon);
-      border-radius: var(--radius);
-      font-family: var(--font-ui);
-      font-size: 13px;
-      font-weight: 700;
-      letter-spacing: .1em;
+    .forgot-link {
+      font-family: var(--font-m);
+      font-size: 9px;
+      color: var(--muted);
+      background: none;
+      border: none;
+      cursor: pointer;
+      transition: color var(--tr);
       text-transform: uppercase;
+      letter-spacing: .05em;
+    }
+    .forgot-link:hover { color: var(--neon); }
+
+    /* ── SUBMIT BUTTON ── */
+    .submit-btn {
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
+      width: 100%;
+      padding: 13px;
+      background: var(--neon);
+      color: #000;
+      font-family: var(--font-m);
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      border: none;
+      border-radius: var(--radius);
+      cursor: pointer;
       transition: box-shadow var(--tr), transform var(--tr);
       margin-top: 4px;
     }
-    .login-btn:hover { box-shadow: var(--shadow-n); transform: translate(-3px, -3px); }
-    .login-btn:active { transform: scale(.96); }
+    .submit-btn:hover {
+      box-shadow: var(--shadow-n);
+      transform: translate(-2px, -2px);
+    }
+    .submit-btn:active { transform: scale(.97); }
 
-    .login-divider {
+    /* ── DIVIDER ── */
+    .or-divider {
       display: flex;
       align-items: center;
-      gap: 12px;
-      margin: 18px 0;
+      gap: 10px;
+      margin: 16px 0;
       font-family: var(--font-m);
       font-size: 9px;
       color: var(--muted);
       text-transform: uppercase;
       letter-spacing: .1em;
     }
-    .login-divider::before, .login-divider::after {
+    .or-divider::before,
+    .or-divider::after {
       content: '';
       flex: 1;
       height: 1px;
-      background: var(--border);
+      background: var(--border-dim);
     }
 
-    .login-socials {
+    /* ── SOCIAL BUTTONS ── */
+    .social-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 10px;
+      gap: 8px;
     }
-    .login-social {
+    .social-btn {
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
+      gap: 7px;
       padding: 11px;
-      background: var(--surface);
-      border: var(--bw) solid var(--border);
+      background: var(--bg2);
+      border: var(--bw) solid var(--border-dim);
       border-radius: var(--radius);
       font-family: var(--font-m);
-      font-size: 11px;
+      font-size: 10px;
       color: var(--text);
       cursor: pointer;
-      transition: border-color var(--tr), box-shadow var(--tr), transform var(--tr), color var(--tr);
+      transition: border-color var(--tr), color var(--tr);
     }
-    .login-social:hover {
-      border-color: var(--neon);
-      box-shadow: 3px 3px 0 rgba(200,255,0,.15);
-      transform: translate(-2px, -2px);
-      color: var(--neon);
-    }
+    .social-btn:hover { border-color: var(--neon); color: var(--neon); }
 
-    .login-footer {
-      margin-top: 24px;
-      text-align: center;
-      font-family: var(--font-m);
-      font-size: 11px;
-      color: var(--muted);
-    }
-    .login-footer a {
-      color: var(--neon);
-      font-weight: 700;
-      transition: opacity var(--tr);
-    }
-    .login-footer a:hover { opacity: .7; }
-
-    /* Floating decorative elements */
-    .login-deco {
+    /* ── PASSWORD TOGGLE ── */
+    .pass-toggle {
       position: absolute;
-      border: 1.5px solid var(--neon);
-      opacity: .15;
-      pointer-events: none;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-size: 14px;
+      cursor: pointer;
+      padding: 4px;
+      transition: color var(--tr);
+      z-index: 2;
+      min-width: 40px;
+      min-height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
-    .deco-1 { width: 60px; height: 60px; top: 10%; right: 8%; animation: float 4s ease-in-out infinite; }
-    .deco-2 { width: 40px; height: 40px; bottom: 15%; left: 6%; animation: float 5s ease-in-out infinite .5s; }
-    .deco-3 { width: 80px; height: 2px; top: 25%; left: 12%; background: var(--neon); animation: hud-blink 2s infinite; }
+    .pass-toggle:hover { color: var(--neon); }
+    .field-wrap.has-toggle input {
+      padding-right: 44px;
+    }
 
-    /* Toast fix for mobile */
+    /* ── STRENGTH BAR ── */
+    .strength-wrap {
+      height: 3px;
+      background: var(--border-dim);
+      border-radius: 2px;
+      overflow: hidden;
+      margin-top: 5px;
+    }
+    .strength-bar {
+      height: 100%;
+      border-radius: 2px;
+      width: 0%;
+      transition: width .3s ease, background .3s ease;
+    }
+
+    /* ── TOAST ── */
     .toast-container {
       position: fixed;
-      bottom: calc(60px + 14px);
+      bottom: 24px;
       left: 50%;
       transform: translateX(-50%);
       z-index: 9990;
@@ -346,206 +470,440 @@
       align-items: center;
       pointer-events: none;
     }
-    @media(min-width: 769px) {
-      .toast-container { bottom: 20px; }
+    .toast {
+      background: var(--surface);
+      color: var(--text);
+      border: var(--bw) solid var(--neon);
+      padding: 9px 16px;
+      border-radius: var(--radius);
+      font-family: var(--font-m);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .05em;
+      box-shadow: var(--shadow-d);
+      white-space: nowrap;
+      animation: toast-in .28s cubic-bezier(.34,1.4,.64,1);
+    }
+    .toast.success { border-color: var(--neon); }
+    .toast.error { border-color: #ff4d6d; color: #ff4d6d; }
+    @keyframes toast-in {
+      from { opacity: 0; transform: translateY(10px) scale(.95); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
     }
 
-    /* Responsive */
-    @media (max-width: 900px) {
-      .login-page { grid-template-columns: 1fr; }
-      .login-left { display: none; }
-      .login-right { padding: 80px 24px 40px; }
-      .login-back { left: 24px; }
+    /* ── TERMS NOTE ── */
+    .terms-note {
+      font-family: var(--font-m);
+      font-size: 9px;
+      color: var(--muted);
+      text-align: center;
+      line-height: 1.6;
+      margin-top: 6px;
     }
-    @media (max-width: 460px) {
-      .login-socials { grid-template-columns: 1fr; }
-      .login-title { font-size: clamp(36px, 8vw, 52px); }
+    .terms-note a {
+      color: var(--neon);
+      text-decoration: none;
+    }
+
+    /* ── FIELD ERROR ── */
+    .field-error {
+      font-family: var(--font-m);
+      font-size: 9px;
+      color: #ff4d6d;
+      display: none;
+      margin-top: 3px;
+    }
+    .field-group.has-error .field-wrap input,
+    .field-group.has-error .field-wrap select {
+      border-color: #ff4d6d;
+    }
+    .field-group.has-error .field-error { display: block; }
+
+    /* ── LOADING SPINNER ── */
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .spin { display: inline-block; animation: spin .7s linear infinite; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 480px) {
+      body { padding: 14px 12px; justify-content: flex-start; padding-top: 70px; }
+      .auth-card { padding: 24px 18px; }
+      .form-title { font-size: clamp(36px, 9vw, 48px); }
+      .social-grid { grid-template-columns: 1fr; }
+      .back-link { top: 16px; left: 14px; }
+      .brand { top: 16px; right: 14px; }
+    }
+    @media (min-width: 481px) and (max-width: 768px) {
+      .auth-wrapper { max-width: 400px; }
     }
   </style>
 </head>
 <body>
 
-<div class="login-page">
-  <!-- LEFT: Visual -->
-  <div class="login-left" data-aos="fade-right" data-aos-duration="1000">
-    <div class="login-visual">
-      <div class="login-bolt" data-aos="zoom-in" data-aos-delay="200">
-        <svg viewBox="0 0 160 185" fill="none">
-          <ellipse cx="80" cy="147" rx="62" ry="15" fill="#13131A" stroke="#C8FF00" stroke-width="2.5"/>
-          <path d="M18 132 Q18 164 80 164 Q142 164 142 132 Z" fill="#13131A" stroke="#C8FF00" stroke-width="2.5"/>
-          <ellipse cx="80" cy="132" rx="62" ry="14" fill="#1E1E28" stroke="#C8FF00" stroke-width="2.5"/>
-          <ellipse cx="80" cy="132" rx="52" ry="9" fill="#252535"/>
-          <path d="M90 34L56 104H80L68 162L122 84H96Z" fill="#C8FF00" stroke="#070709" stroke-width="2" stroke-linejoin="round"/>
-        </svg>
-      </div>
-      <div class="login-quote" data-aos="fade-up" data-aos-delay="400">
-        AMUNISI CEPAT,<br><span>TUGAS TAMAT.</span>
-      </div>
-      <p class="login-desc" data-aos="fade-up" data-aos-delay="600">
-        Sistem pemesanan online untuk mahasiswa yang selalu buru-buru. Makanan lezat, harga bersahabat, antar kilat.
-      </p>
-      <div class="login-stats" data-aos="fade-up" data-aos-delay="800">
-        <div class="login-stat">
-          <div class="login-stat-num">2.4K</div>
-          <div class="login-stat-label">Pesanan</div>
-        </div>
-        <div class="login-stat">
-          <div class="login-stat-num">4.9</div>
-          <div class="login-stat-label">Rating</div>
-        </div>
-        <div class="login-stat">
-          <div class="login-stat-num">&lt;15</div>
-          <div class="login-stat-label">Menit</div>
-        </div>
-      </div>
-    </div>
+<!-- Background orbs -->
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+
+<!-- Back link -->
+<button class="back-link" onclick="goToHome()">
+  <i class="bi bi-arrow-left"></i> Beranda
+</button>
+
+<!-- Brand -->
+<div class="brand">
+  <div class="brand-bolt">
+    <svg viewBox="0 0 20 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 2L2 14H9L7 22L18 10H11L12 2Z" fill="#C8FF00"/>
+    </svg>
   </div>
-
-  <!-- RIGHT: Form -->
-  <div class="login-right">
-    <button class="login-back" onclick="location.href='index.html'" data-aos="fade-down">
-      <i class="bi bi-arrow-left"></i> Kembali
-    </button>
-
-    <div class="login-deco deco-1"></div>
-    <div class="login-deco deco-2"></div>
-    <div class="login-deco deco-3"></div>
-
-    <div class="login-form-wrap">
-      <div class="login-header" data-aos="fade-up" data-aos-delay="100">
-        <div class="login-tag"><span class="blink">▮</span> SISTEM LOGIN // AKTIF</div>
-        <h1 class="login-title">MASUK<br>AKUN</h1>
-        <p class="login-subtitle">Masuk untuk akses riwayat pesanan, voucher eksklusif, dan tracking real-time.</p>
-      </div>
-
-      <!-- ✅ SATU FORM LENGKAP DENGAN ROLE SELECTOR -->
-      <form class="login-form" onsubmit="event.preventDefault(); handleLogin();" data-aos="fade-up" data-aos-delay="200">
-        <div class="login-group">
-          <label>Email / Nomor HP</label>
-          <div class="login-input-wrap">
-            <i class="bi bi-envelope"></i>
-            <input type="text" id="loginEmail" placeholder="nama@email.com atau 08xx..." required>
-          </div>
-        </div>
-        <div class="login-group">
-          <label>Kata Sandi</label>
-          <div class="login-input-wrap">
-            <i class="bi bi-lock"></i>
-            <input type="password" id="loginPass" placeholder="••••••••" required>
-          </div>
-        </div>
-        
-        <!-- ✅ ROLE SELECTOR (BARU) -->
-        <div class="login-group">
-          <label>Masuk Sebagai</label>
-          <div class="login-input-wrap">
-            <i class="bi bi-person-badge"></i>
-            <select id="loginRole" required>
-              <option value="customer">Mahasiswa (Pelanggan)</option>
-              <option value="kasir">Kasir</option>
-              <option value="kurir">Kurir</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="login-options" data-aos="fade-up" data-aos-delay="300">
-          <label class="login-remember">
-            <input type="checkbox" id="loginRemember"> Ingat saya
-          </label>
-          <span class="login-forgot">Lupa sandi?</span>
-        </div>
-
-        <button type="submit" class="login-btn" data-aos="fade-up" data-aos-delay="400">
-          <i class="bi bi-lightning-charge-fill"></i> MASUK SEKARANG
-        </button>
-      </form>
-
-      <div class="login-divider" data-aos="fade-up" data-aos-delay="500">atau masuk dengan</div>
-
-      <div class="login-socials" data-aos="fade-up" data-aos-delay="600">
-        <button class="login-social" onclick="showToast('Login Google dalam pengembangan', 'error')">
-          <i class="bi bi-google"></i> Google
-        </button>
-        <button class="login-social" onclick="showToast('Login WhatsApp dalam pengembangan', 'error')">
-          <i class="bi bi-whatsapp"></i> WhatsApp
-        </button>
-      </div>
-
-      <div class="login-footer" data-aos="fade-up" data-aos-delay="700">
-        Belum punya akun? <a href="#" onclick="showToast('Fitur daftar segera hadir!', 'success'); return false;">Daftar Sekarang</a>
-      </div>
-    </div>
-  </div>
+  SKS
 </div>
+
+<!-- Auth card -->
+<div class="auth-wrapper">
+  <div class="auth-card">
+
+    <!-- Tab bar -->
+    <div class="tab-bar" role="tablist">
+      <button class="tab-btn active" id="tabLogin" onclick="switchPanel('login')" role="tab">
+        <i class="bi bi-box-arrow-in-right"></i> Masuk
+      </button>
+      <button class="tab-btn" id="tabRegister" onclick="switchPanel('register')" role="tab">
+        <i class="bi bi-person-plus"></i> Daftar
+      </button>
+    </div>
+
+    <!-- Panel Slider -->
+    <div class="panel-slider" id="panelSlider">
+
+      <!-- LOGIN PANEL -->
+      <div class="panel active" id="panelLogin">
+        <div class="form-tag"><span class="blink">▮</span> AUTH // MASUK</div>
+        <h1 class="form-title">MASUK<br>AKUN</h1>
+        <p class="form-subtitle">Akses riwayat pesanan, voucher,<br>dan tracking real-time.</p>
+
+        <form class="auth-form" onsubmit="event.preventDefault(); handleLogin();">
+
+          <div class="field-group" id="lg-email-group">
+            <label class="field-label">Email / Nomor HP</label>
+            <div class="field-wrap">
+              <i class="bi bi-envelope fi"></i>
+              <input type="text" id="lgEmail" placeholder="nama@email.com atau 08xx..." autocomplete="username">
+            </div>
+            <span class="field-error" id="lg-email-err">Masukkan email atau nomor HP</span>
+          </div>
+
+          <div class="field-group" id="lg-pass-group">
+            <label class="field-label">Kata Sandi</label>
+            <div class="field-wrap has-toggle">
+              <i class="bi bi-lock fi"></i>
+              <input type="password" id="lgPass" placeholder="••••••••" autocomplete="current-password">
+              <button type="button" class="pass-toggle" onclick="togglePass('lgPass', this)" aria-label="Tampilkan sandi">
+                <i class="bi bi-eye"></i>
+              </button>
+            </div>
+            <span class="field-error" id="lg-pass-err">Masukkan kata sandi</span>
+          </div>
+
+          <div class="field-group">
+            <label class="field-label">Masuk Sebagai</label>
+            <div class="field-wrap">
+              <i class="bi bi-person-badge fi"></i>
+              <select id="lgRole">
+                <option value="customer">Mahasiswa (Pelanggan)</option>
+                <option value="kasir">Kasir</option>
+                <option value="kurir">Kurir</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-options">
+            <label class="remember-label">
+              <input type="checkbox" id="lgRemember"> Ingat saya
+            </label>
+            <button type="button" class="forgot-link" onclick="showToast('Fitur lupa sandi segera hadir!', 'error')">
+              Lupa sandi?
+            </button>
+          </div>
+
+          <button type="submit" class="submit-btn" id="lgSubmitBtn">
+            <i class="bi bi-lightning-charge-fill"></i> MASUK SEKARANG
+          </button>
+
+        </form>
+
+        <div class="or-divider">atau</div>
+
+        <div class="social-grid">
+          <button class="social-btn" onclick="showToast('Login Google segera hadir', 'error')">
+            <i class="bi bi-google"></i> Google
+          </button>
+          <button class="social-btn" onclick="showToast('Login WhatsApp segera hadir', 'error')">
+            <i class="bi bi-whatsapp"></i> WhatsApp
+          </button>
+        </div>
+
+      </div><!-- /panelLogin -->
+
+      <!-- REGISTER PANEL -->
+      <div class="panel hidden-right" id="panelRegister">
+        <div class="form-tag"><span class="blink">▮</span> AUTH // DAFTAR</div>
+        <h1 class="form-title">BUAT<br>AKUN</h1>
+        <p class="form-subtitle">Bergabung dan nikmati kemudahan pesan makanan kilat.</p>
+
+        <form class="auth-form" onsubmit="event.preventDefault(); handleRegister();">
+
+          <div class="field-group" id="rg-name-group">
+            <label class="field-label">Nama Lengkap</label>
+            <div class="field-wrap">
+              <i class="bi bi-person fi"></i>
+              <input type="text" id="rgName" placeholder="Nama kamu..." autocomplete="name">
+            </div>
+            <span class="field-error" id="rg-name-err">Masukkan nama lengkap</span>
+          </div>
+
+          <div class="field-group" id="rg-email-group">
+            <label class="field-label">Email / Nomor HP</label>
+            <div class="field-wrap">
+              <i class="bi bi-envelope fi"></i>
+              <input type="text" id="rgEmail" placeholder="nama@email.com atau 08xx..." autocomplete="username">
+            </div>
+            <span class="field-error" id="rg-email-err">Masukkan email atau nomor HP</span>
+          </div>
+
+          <div class="field-group" id="rg-pass-group">
+            <label class="field-label">Kata Sandi</label>
+            <div class="field-wrap has-toggle">
+              <i class="bi bi-lock fi"></i>
+              <input type="password" id="rgPass" placeholder="Min. 8 karakter" autocomplete="new-password" oninput="checkStrength(this.value)">
+              <button type="button" class="pass-toggle" onclick="togglePass('rgPass', this)" aria-label="Tampilkan sandi">
+                <i class="bi bi-eye"></i>
+              </button>
+            </div>
+            <div class="strength-wrap">
+              <div class="strength-bar" id="strengthBar"></div>
+            </div>
+            <span class="field-error" id="rg-pass-err">Minimal 8 karakter</span>
+          </div>
+
+          <div class="field-group" id="rg-pass2-group">
+            <label class="field-label">Konfirmasi Sandi</label>
+            <div class="field-wrap has-toggle">
+              <i class="bi bi-lock-fill fi"></i>
+              <input type="password" id="rgPass2" placeholder="Ulangi kata sandi" autocomplete="new-password">
+              <button type="button" class="pass-toggle" onclick="togglePass('rgPass2', this)" aria-label="Tampilkan sandi">
+                <i class="bi bi-eye"></i>
+              </button>
+            </div>
+            <span class="field-error" id="rg-pass2-err">Kata sandi tidak cocok</span>
+          </div>
+
+          <div class="field-group">
+            <label class="field-label">Daftar Sebagai</label>
+            <div class="field-wrap">
+              <i class="bi bi-person-badge fi"></i>
+              <select id="rgRole">
+                <option value="customer">Mahasiswa (Pelanggan)</option>
+                <option value="kasir">Kasir</option>
+                <option value="kurir">Kurir</option>
+              </select>
+            </div>
+          </div>
+
+          <button type="submit" class="submit-btn" id="rgSubmitBtn">
+            <i class="bi bi-check-circle"></i> BUAT AKUN
+          </button>
+
+          <p class="terms-note">
+            Dengan mendaftar, kamu menyetujui <a href="#">Syarat & Ketentuan</a> serta <a href="#">Kebijakan Privasi</a> SKS.
+          </p>
+
+        </form>
+
+      </div><!-- /panelRegister -->
+
+    </div><!-- /panelSlider -->
+
+  </div><!-- /auth-card -->
+</div><!-- /auth-wrapper -->
 
 <!-- Toast container -->
 <div class="toast-container" id="toastContainer"></div>
 
-<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 <script>
-  // Init AOS
-  AOS.init({ once: true, offset: 50, duration: 800, easing: 'ease-out-cubic' });
+  /* ─── PANEL SWITCH ─── */
+  let currentPanel = 'login';
 
-  // GSAP entrance for bolt
-  gsap.from('.login-bolt svg', {
-    duration: 1.2,
-    scale: 0.6,
-    rotation: -15,
-    opacity: 0,
-    ease: 'elastic.out(1, 0.5)',
-    delay: 0.3
-  });
+  function switchPanel(target) {
+    if (target === currentPanel) return;
+    const from = document.getElementById('panel' + cap(currentPanel));
+    const to   = document.getElementById('panel' + cap(target));
+    const fromTab = document.getElementById('tab' + cap(currentPanel));
+    const toTab   = document.getElementById('tab' + cap(target));
 
-  // GSAP floating decor
-  gsap.to('.deco-1', { y: -15, duration: 2.5, repeat: -1, yoyo: true, ease: 'sine.inOut' });
-  gsap.to('.deco-2', { y: 15, duration: 3, repeat: -1, yoyo: true, ease: 'sine.inOut', delay: 0.5 });
+    // Direction: register is to the right of login
+    const goRight = target === 'register';
 
-  function handleLogin() {
-    const email = document.getElementById('loginEmail').value.trim();
-    const pass = document.getElementById('loginPass').value;
-    const role = document.getElementById('loginRole').value;
-    
-    if (!email || !pass) { 
-      showToast('Lengkapi semua field!', 'error'); 
-      return; 
-    }
+    from.className = 'panel ' + (goRight ? 'hidden-left' : 'hidden-right');
+    to.className   = 'panel active';
 
-    let name = 'User';
-    if (email.includes('@')) {
-      const local = email.split('@')[0];
-      name = local.charAt(0).toUpperCase() + local.slice(1);
-      name = name.replace(/[0-9.]/g, '');
-      if (name.length < 2) name = 'User';
-    } else {
-      name = 'User ' + email.slice(-4);
-    }
+    fromTab.classList.remove('active');
+    toTab.classList.add('active');
 
-    localStorage.setItem('sks_user', JSON.stringify({ name: name, email: email, role: role }));
-    
-    showToast('Login berhasil! Mengalihkan...', 'success');
-    
-    // Redirect berdasarkan role
-    setTimeout(() => { 
-      if (role === 'kasir') {
-        location.href = 'index.html#kasir-dashboard';
-      } else if (role === 'kurir') {
-        location.href = 'index.html#kurir-dashboard';
-      } else {
-        location.href = 'index.html';
-      }
-    }, 1200);
+    // Sync slider height after animation
+    syncHeight();
+    currentPanel = target;
   }
 
+  function cap(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+
+  function syncHeight() {
+    const slider = document.getElementById('panelSlider');
+    // let height settle naturally (panels use position:absolute when hidden)
+    setTimeout(() => { slider.style.minHeight = ''; }, 0);
+  }
+
+  /* ─── PASSWORD TOGGLE ─── */
+  function togglePass(inputId, btn) {
+    const inp = document.getElementById(inputId);
+    const icon = btn.querySelector('i');
+    if (inp.type === 'password') {
+      inp.type = 'text';
+      icon.className = 'bi bi-eye-slash';
+    } else {
+      inp.type = 'password';
+      icon.className = 'bi bi-eye';
+    }
+  }
+
+  /* ─── STRENGTH METER ─── */
+  function checkStrength(val) {
+    const bar = document.getElementById('strengthBar');
+    if (!bar) return;
+    let score = 0;
+    if (val.length >= 8) score++;
+    if (/[A-Z]/.test(val)) score++;
+    if (/[0-9]/.test(val)) score++;
+    if (/[^A-Za-z0-9]/.test(val)) score++;
+    const pct = (score / 4) * 100;
+    const colors = ['#ff4d6d', '#ff9f43', '#ffd32a', '#C8FF00'];
+    bar.style.width = pct + '%';
+    bar.style.background = colors[score - 1] || 'transparent';
+  }
+
+  /* ─── FIELD VALIDATION ─── */
+  function clearErrors() {
+    document.querySelectorAll('.field-group.has-error').forEach(g => g.classList.remove('has-error'));
+  }
+  function setError(groupId, show) {
+    const g = document.getElementById(groupId);
+    if (g) g.classList.toggle('has-error', show);
+    return show;
+  }
+
+  /* ─── LOGIN HANDLER ─── */
+  function handleLogin() {
+    clearErrors();
+    const email = document.getElementById('lgEmail').value.trim();
+    const pass  = document.getElementById('lgPass').value;
+    const role  = document.getElementById('lgRole').value;
+
+    let err = false;
+    if (!email)  err = setError('lg-email-group', true) || err;
+    if (!pass)   err = setError('lg-pass-group', true)  || err;
+    if (err) return;
+
+    // Loading state
+    const btn = document.getElementById('lgSubmitBtn');
+    btn.innerHTML = '<i class="bi bi-arrow-repeat spin"></i> Memproses...';
+    btn.disabled = true;
+
+    // Simulate login
+    setTimeout(() => {
+      let name = 'User';
+      if (email.includes('@')) {
+        const local = email.split('@')[0];
+        name = local.charAt(0).toUpperCase() + local.slice(1).replace(/[0-9.]/g, '') || 'User';
+        if (name.length < 2) name = 'User';
+      } else {
+        name = 'Pengguna ' + email.slice(-4);
+      }
+
+      localStorage.setItem('sks_user', JSON.stringify({ name, email, role }));
+      if (document.getElementById('lgRemember').checked) {
+        localStorage.setItem('sks_remember', email);
+      }
+
+      showToast('Login berhasil! Mengalihkan...', 'success');
+
+      setTimeout(() => {
+        if (role === 'kasir') location.href = 'index.html#kasir-dashboard';
+        else if (role === 'kurir') location.href = 'index.html#kurir-dashboard';
+        else location.href = 'index.html';
+      }, 1000);
+    }, 900);
+  }
+
+  /* ─── REGISTER HANDLER ─── */
+  function handleRegister() {
+    clearErrors();
+    const name  = document.getElementById('rgName').value.trim();
+    const email = document.getElementById('rgEmail').value.trim();
+    const pass  = document.getElementById('rgPass').value;
+    const pass2 = document.getElementById('rgPass2').value;
+    const role  = document.getElementById('rgRole').value;
+
+    let err = false;
+    if (!name)          err = setError('rg-name-group', true) || err;
+    if (!email)         err = setError('rg-email-group', true) || err;
+    if (pass.length < 8) err = setError('rg-pass-group', true) || err;
+    if (pass !== pass2) err = setError('rg-pass2-group', true) || err;
+    if (err) return;
+
+    // Loading state
+    const btn = document.getElementById('rgSubmitBtn');
+    btn.innerHTML = '<i class="bi bi-arrow-repeat spin"></i> Mendaftarkan...';
+    btn.disabled = true;
+
+    // Simulate register
+    setTimeout(() => {
+      const cleanName = name.charAt(0).toUpperCase() + name.slice(1);
+      localStorage.setItem('sks_user', JSON.stringify({ name: cleanName, email, role }));
+      showToast('Akun berhasil dibuat! Selamat datang 🎉', 'success');
+
+      setTimeout(() => { location.href = 'index.html'; }, 1000);
+    }, 1000);
+  }
+
+  /* ─── BACK TO HOME ─── */
+  function goToHome() {
+    location.href = 'index.html';
+  }
+
+  /* ─── PREFILL REMEMBER ─── */
+  window.addEventListener('DOMContentLoaded', () => {
+    const saved = localStorage.getItem('sks_remember');
+    if (saved) {
+      document.getElementById('lgEmail').value = saved;
+      document.getElementById('lgRemember').checked = true;
+    }
+    // If already logged in, redirect
+    const user = JSON.parse(localStorage.getItem('sks_user') || 'null');
+    if (user) {
+      showToast('Sudah login sebagai ' + user.name, 'success');
+      setTimeout(() => { location.href = 'index.html'; }, 1200);
+    }
+  });
+
+  /* ─── TOAST ─── */
   function showToast(msg, type = 'default') {
     const tc = document.getElementById('toastContainer');
     if (!tc) return;
     const t = document.createElement('div');
     t.className = 'toast ' + type;
     const icon = type === 'success' ? 'bi-check-circle-fill' : type === 'error' ? 'bi-x-circle-fill' : 'bi-info-circle-fill';
-    t.innerHTML = '<i class="bi ' + icon + '"></i> ' + msg;
+    t.innerHTML = `<i class="bi ${icon}"></i> ${msg}`;
     tc.appendChild(t);
-    setTimeout(() => t.remove(), 2600);
+    setTimeout(() => t.remove(), 2800);
   }
 </script>
 </body>

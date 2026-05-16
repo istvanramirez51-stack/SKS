@@ -9,8 +9,12 @@
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Archivo+Black&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&family=Syne:wght@700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="assets/css/style.css">
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
-</head>
+
+  </head>
 <body>
 
 <!-- ════════════════ NAVBAR ════════════════ -->
@@ -303,6 +307,140 @@
       <i class="bi bi-lightning-charge-fill"></i> KLAIM SEKARANG
     </button>
   </div>
+
+<section class="section feedback-section" id="feedback">
+
+  <div class="sec-header" data-aos="fade-down">
+    <div>
+      <div class="section-label">FEEDBACK & LAPORAN</div>
+      <h2 class="section-title">
+        SARAPAN BUG &<br>
+        <span class="neon-text">MASUKAN KAMU</span>
+      </h2>
+    </div>
+
+    <p class="sec-subtitle" data-aos="fade-left" data-aos-delay="100">
+      Ada kendala atau ide gila? Kirim screenshot langsung ke dapur SKS.
+    </p>
+  </div>
+
+  <form class="feedback-form" id="feedbackForm">
+
+    <div class="form-row">
+
+      <div class="form-group">
+        <label>Nama / Nick</label>
+
+        <input
+          type="text"
+          id="fb-name"
+          name="from_name"
+          required
+          placeholder="Siapa kamu?"
+        >
+      </div>
+
+      <div class="form-group">
+        <label>Email Aktif</label>
+
+        <input
+          type="email"
+          id="fb-email"
+          name="from_email"
+          required
+          placeholder="emailkamu@gmail.com"
+        >
+      </div>
+
+    </div>
+
+    <div class="form-group">
+
+      <label>Kategori</label>
+
+      <div class="fb-cat-wrap">
+
+        <label class="fb-cat-btn">
+          <input
+            type="radio"
+            name="category"
+            value="saran"
+            checked
+          >
+          <span>💡 Saran / Ide</span>
+        </label>
+
+        <label class="fb-cat-btn">
+          <input
+            type="radio"
+            name="category"
+            value="bug"
+          >
+          <span>🐛 Bug / Error</span>
+        </label>
+
+      </div>
+    </div>
+
+    <div class="form-group">
+
+      <label>Pesan Detail</label>
+
+      <textarea
+        id="fb-msg"
+        name="message"
+        rows="4"
+        required
+        placeholder="Jelaskan di sini..."
+      ></textarea>
+
+    </div>
+
+    <!-- <div class="form-group">
+
+      <label>Lampirkan Screenshot</label>
+
+      <div class="fb-file-wrap" id="fbFileWrap">
+
+        <input
+          type="file"
+          id="fb-file"
+          name="attachment"
+          accept="image/*"
+          class="fb-file-input"
+        >
+
+        <div class="fb-file-preview" id="fbFilePreview">
+          <i class="bi bi-camera-fill"></i>
+          <span>Klik atau drag file ke sini</span>
+        </div>
+
+        <img
+          id="fbImgPreview"
+          class="fb-img-preview"
+          style="display:none;"
+        >
+
+        <button
+          type="button"
+          class="fb-remove-file"
+          id="fbRemoveFile"
+          style="display:none;"
+        >
+          <i class="bi bi-x-lg"></i>
+        </button>
+
+      </div> -->
+    </div>
+
+    <button type="submit" class="btn-primary fb-submit-btn">
+      <i class="bi bi-send-fill"></i>
+      KIRIM LAPORAN
+    </button>
+
+  </form>
+
+</section>
 
   <!-- FOOTER -->
   <footer class="footer" id="kontak">
@@ -687,5 +825,41 @@
 </div>
 
 <script src="assets/js/script.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
+<script>
+(function () {
+  emailjs.init("wWYV9Ro9dyAYIulJe");
+})();
+
+const form = document.getElementById("feedbackForm");
+
+form.addEventListener("submit", function (e) {
+
+  e.preventDefault();
+
+  emailjs.sendForm(
+    "service_u7exgwh",
+    "template_guy49nt",
+    form
+  )
+  .then(() => {
+
+    alert("Laporan berhasil dikirim 🚀");
+
+    form.reset();
+
+  })
+  .catch((error) => {
+
+    console.log(error);
+
+    alert("Gagal mengirim laporan ❌");
+
+  });
+
+});
+</script>
+
 </body>
 </html>

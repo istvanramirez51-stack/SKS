@@ -1176,5 +1176,117 @@ function startHeroAnimations() {
   });
 }
 
+// ═── INIT AOS & GSAP ─══
+function initAnimations() {
+  AOS.init({ duration: 800, easing: 'ease-out-cubic', once: true, offset: 60 });
+  
+  // GSAP Hover & Micro-interactions
+  const gsapEls = {
+    buttons: '.btn-primary, .btn-outline, .btn-dark',
+    cards: '.product-card',
+    navBtns: '.nav-btn',
+    formInputs: '.feedback-form input, .feedback-form textarea'
+  };
+
+  // Buttons spring hover
+  gsap.utils.toArray(gsapEls.buttons).forEach(btn => {
+    btn.addEventListener('mouseenter', () => gsap.to(btn, { y: -4, scale: 1.02, boxShadow: "var(--shadow-n)", duration: 0.2, ease: "power2.out" }));
+    btn.addEventListener('mouseleave', () => gsap.to(btn, { y: 0, scale: 1, boxShadow: "none", duration: 0.2, ease: "power2.out" }));
+    btn.addEventListener('mousedown', () => gsap.to(btn, { scale: 0.95, duration: 0.1 }));
+    btn.addEventListener('mouseup', () => gsap.to(btn, { scale: 1.03, duration: 0.2, ease: "elastic.out(1, 0.5)" }));
+  });
+
+  // Product card lift
+  gsap.utils.toArray(gsapEls.cards).forEach(card => {
+    card.addEventListener('mouseenter', () => gsap.to(card, { y: -6, boxShadow: "var(--shadow-n)", duration: 0.25, ease: "back.out(1.5)" }));
+    card.addEventListener('mouseleave', () => gsap.to(card, { y: 0, boxShadow: "none", duration: 0.25, ease: "power2.out" }));
+  });
+
+  // Input focus glow
+  gsap.utils.toArray(gsapEls.formInputs).forEach(inp => {
+    inp.addEventListener('focus', () => gsap.to(inp, { y: -2, boxShadow: "4px 4px 0 rgba(200,255,0,.15)", duration: 0.2 }));
+    inp.addEventListener('blur', () => gsap.to(inp, { y: 0, boxShadow: "none", duration: 0.2 }));
+  });
+}
+
+// ═── FEEDBACK FORM LOGIC ─══
+function initFeedbackForm() {
+  const form = document.getElementById('feedbackForm');
+  const fileInput = document.getElementById('fb-file');
+  const fileWrap = document.getElementById('fbFileWrap');
+  const imgPreview = document.getElementById('fbImgPreview');
+  const removeBtn = document.getElementById('fbRemoveFile');
+  const previewPlaceholder = document.getElementById('fbFilePreview');
+
+  if (!form) return;
+
+  // Drag & Drop
+  ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(evt => fileWrap.addEventListener(evt, e => { e.preventDefault(); e.stopPropagation(); }));
+  fileWrap.addEventListener('dragenter', () => fileWrap.classList.add('dragover'));
+  fileWrap.addEventListener('dragover', () => fileWrap.classList.add('dragover'));
+  fileWrap.addEventListener('dragleave', () => fileWrap.classList.remove('dragover'));
+  fileWrap.addEventListener('drop', e => {
+    fileWrap.classList.remove('dragover');
+    if (e.dataTransfer.files.length) { fileInput.files = e.dataTransfer.files; handleFile(e.dataTransfer.files[0]); }
+  });
+  fileInput.addEventListener('change', e => { if (e.target.files.length) handleFile(e.target.files[0]); });
+
+  function handleFile(file) {
+    if (!file.type.startsWith('image/')) return showToast('Hanya format gambar yang diterima!', 'error');
+    const reader = new FileReader();
+    reader.onload = e => {
+      imgPreview.src = e.target.result;
+      imgPreview.style.display = 'block';
+      previewPlaceholder.style.display = 'none';
+      removeBtn.style.display = 'flex';
+      gsap.fromTo(imgPreview, { scale: 0.8, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.3, ease: "back.out(1.7)" });
+    };
+    reader.readAsDataURL(file);
+  }
+
+  removeBtn.addEventListener('click', () => {
+    fileInput.value = ''; imgPreview.style.display = 'none'; imgPreview.src = '';
+    previewPlaceholder.style.display = 'flex'; removeBtn.style.display = 'none';
+    gsap.to(removeBtn, { scale: 1.3, opacity: 0, duration: 0.15, onComplete: () => removeBtn.style.display = 'none' });
+  });
+
+  // Submit
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    const name = document.getElementById('fb-name').value.trim();
+    const email = document.getElementById('fb-email').value.trim();
+    const cat = document.querySelector('input[name="fb-cat"]:checked').value;
+    const msg = document.getElementById('fb-msg').value.trim();
+    const file = fileInput.files[0];
+
+    if (!name || !email || !msg) return showToast('Lengkapi semua field wajib!', 'error');
+
+    const btn = form.querySelector('.fb-submit-btn');
+    const original = btn.innerHTML;
+    btn.innerHTML = '<i class="bi bi-arrow-repeat spin"></i> MENGIRIM...';
+    btn.disabled = true;
+
+    // Simulasi kirim & buka email client
+    const subject = `[SKS Feedback] ${cat === 'bug' ? '🐛 Bug Report' : '💡 Saran'} dari ${name}`;
+    const body = `Nama: ${name}\nEmail: ${email}\nKategori: ${cat}\nPesan:\n${msg}\n\n📎 *Silakan lampirkan screenshot secara manual di email yang terbuka.*`;
+    const mailto = `mailto:sks@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+    setTimeout(() => {
+      window.location.href = mailto;
+      showToast('Form berhasil diproses! Email client akan terbuka.', 'success');
+      form.reset(); removeBtn.click();
+      btn.innerHTML = original; btn.disabled = false;
+      gsap.fromTo(btn, { y: 5, scale: 0.95 }, { y: 0, scale: 1, duration: 0.3, ease: "elastic.out(1, 0.3)" });
+    }, 1200);
+  });
+}
+
+// 🔁 PASTIKAN KEDUA FUNGSI DI INVOKE DI DOMContentLoaded
+document.addEventListener('DOMContentLoaded', () => {
+  // ... kode existing Anda ...
+  initAnimations();
+  initFeedbackForm();
+});
+
 // ═── UTILS ─══
 function fmt(n) { return 'Rp ' + n.toLocaleString('id-ID'); }
